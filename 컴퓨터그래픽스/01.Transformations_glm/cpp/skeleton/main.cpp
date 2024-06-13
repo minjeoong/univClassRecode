@@ -27,8 +27,8 @@ void glm_vec_test() {
   std::cout << "glm vector test" << std::endl;
   std::cout << "---------------" << std::endl;
   
-  glm::vec3 x;
-  glm::vec3 y;
+  glm::vec3 x(3.0f, 5.0f, 7.0f);
+  glm::vec3 y(3.0f, 5.0f, 7.0f);
   glm::vec3 z;
   float dot;
   
@@ -39,16 +39,21 @@ void glm_vec_test() {
   std::cout << "y = " << y << std::endl; 
 
   // TODO 3)
+  y += x;
   std::cout << "y += x" << std::endl;
   std::cout << "y => " << y << std::endl;
   std::cout << "x => " << x << std::endl;
 
   // TODO 4)
+  dot = glm::dot(x,y);
   std::cout << "dot(x,y) => " << dot << std::endl;
 
   // TODO 5)
+  x = glm::vec3(1.0f, 0.0f, 0.0f);
+  y = glm::vec3(0.0f, 1.0f, 0.0f);
   std::cout << "reset x as [1, 0, 0]" << std::endl;
   std::cout << "reset y as [0, 1, 0]" << std::endl;
+  z = glm::cross(x, y);
   std::cout << "z = cross(x, y)" << std::endl;
   std::cout << "z = " << z << std::endl;
 }
@@ -59,19 +64,27 @@ void glm_mat_test() {
   std::cout << "glm matrix test" << std::endl;
   std::cout << "---------------" << std::endl;
 
-  glm::mat4 A;
+  glm::mat4 A(1.0f);
+
+
   glm::mat4 B;
 
   // TODO 6) construct identity matrix
+
   std::cout << A << std::endl;
 
   // TODO 7)
   // Notice: The matrix is column major
-
+  A = glm::mat4(1.0f, 2.0f, 3.0f, 0.0f,
+                2.0f, 1.0f, -2.0f, 0.0f,
+                -1.0f, 0.0f, 1.0f, 0.0f,
+                -1.0f, 2.0f, 4.0f, 1.0f);
   std::cout << "A = " << std::endl;
   std::cout << A << std::endl;  
 
   // TODO 8)
+  B = glm::transpose(A);
+
   std::cout << "B = A^T" << std::endl;
   std::cout << "B = " << std::endl;
   std::cout << B << std::endl;
@@ -107,7 +120,42 @@ void glm_transform_test() {
   glm::mat4 mat_Perspective;
   
   // TODO 9)
+  
+  // 
+  mat_Translate = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -1.0f, 2.0f));
+    
+  // 회전
+  glm::vec3 axis(1.0f, 2.0f, -1.0f);
+  float angle = 90.0f;
+  float radians = glm::radians(angle);
+  mat_Rotate = glm::rotate(glm::mat4(1.0f), radians, axis);
 
+  //스케일링 변환
+  glm::vec3 scaleFactors(2.0f, 1.0f, 1.5f);
+  mat_Scale = glm::scale(glm::mat4(1.0f), scaleFactors);
+
+
+  //시점 변환
+  glm::vec3 cameraPosition(0.0f, 0.0f, -5.0f); 
+  glm::vec3 targetPosition(0.0f, 0.0f, 0.0f);
+  glm::vec3 upVector(0.0f, 1.0f, 0.0f);
+  mat_LookAt = glm::lookAt(cameraPosition, targetPosition, upVector); // 뷰 변환 행렬 생성
+
+
+  //직교투영 행렬
+  mat_Ortho = glm::ortho(1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f);
+
+  //절두체 행렬
+  mat_Frustum = glm::frustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.1f, 1000.0f);
+
+  //원근 투영 행렬
+  float fov = 60.0f;
+  float aspect = 1.0f;
+  float near = 0.001f;
+  float far = 10000.0f;
+  mat_Perspective = glm::perspective(glm::radians(fov), aspect, near, far);
+
+  
   // DO NOT EDIT below this line
   std::cout << "Translation matrix" << std::endl;
   std::cout << mat_Translate << std::endl;

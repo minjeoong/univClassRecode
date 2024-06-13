@@ -9,5 +9,4 @@ RM = rm -rf
 all: $(SOURCES) $(HEADERS)
 	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(SOURCES) $(LDFLAGS)
 
-clean:
-	$(RM) *.o $(EXECUTABLE)
+clean: $(RM) *.o $(EXECUTABLE)
