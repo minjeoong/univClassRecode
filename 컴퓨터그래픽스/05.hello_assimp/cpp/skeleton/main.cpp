@@ -177,6 +177,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     camera.move_forward(0.1f);
   if (key == GLFW_KEY_S && action == GLFW_PRESS)
     camera.move_backward(0.1f);
+
+  // m  누르면 프린트 -> info_20202070.txt
+  if (key == GLFW_KEY_M && action == GLFW_PRESS)
+    object.print_info();
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -498,8 +502,8 @@ void render_scene()
   const Camera& camera = g_cameras[g_cam_select_idx];
 
   // TODO : set transform using the current camera
-  mat_view = glm::mat4(1.0f); // <- TODO
-  mat_proj = glm::mat4(1.0f); // <- TODO
+  mat_view = camera.get_view_matrix();
+  mat_proj = camera.get_projection_matrix();
 
   // 특정 쉐이더 프로그램 사용
   glUseProgram(program);
@@ -507,6 +511,14 @@ void render_scene()
   for (std::size_t i = 0; i < g_objects.size(); ++i)
   {
     // TODO : draw each object
+    Object& object = g_objects[i];
+    mat_model = object.get_model_matrix();
+
+    mat_PVM = mat_proj * mat_view * mat_model;
+    glUniformMatrix4fv(loc_u_PVM, 1, GL_FALSE, glm::value_ptr(mat_PVM));
+
+    //object.print_info();
+    object.draw(loc_a_position, loc_a_color);
   }
 
   // 쉐이더 프로그램 사용해제
