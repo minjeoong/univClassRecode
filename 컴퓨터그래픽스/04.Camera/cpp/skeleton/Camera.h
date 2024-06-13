@@ -54,6 +54,10 @@ public:
   Camera::Mode mode() const                  { return mode_; }
   void  set_mode(Camera::Mode _mode)         { mode_ = _mode; }
 
+
+  void zoom(float delta);
+
+
 private:
 	// position of the camera
   glm::vec3  position_ = glm::vec3(0.0f, 0.0f, 0.5f);
@@ -73,4 +77,9 @@ private:
 
   float near_ = 0.01f;
   float far_  = 1000.0f;
+
+
+  float zoom_level_ = 45.0f; // 초기 줌 레벨, 예: 45도 시야각
+    float min_zoom_ = 1.0f;    // 최소 줌 레벨
+    float max_zoom_ = 45.0f; 
 };
