@@ -20,6 +20,7 @@
 #include "imgui_impl_opengl3.h"
 #include "imGuIZMOquat.h"
 
+
 // model hpp
 #include "models/avocado_vlist.hpp"
 
@@ -131,7 +132,20 @@ void compose_imgui_frame()
     ImGui::Begin("콘트롤(control)");
 
     // TODO
-    ImGui::SliderFloat("translate", &g_vec_model_translate[0], -3.0f, 3.0f);
+    glm::vec3 translation = g_vec_model_translate;
+    ImGui::SliderFloat3("translation", &translation[0], -3.0f, 3.0f);
+    g_vec_model_translate = translation;
+
+    glm::vec3 scale = g_vec_model_scale;
+    ImGui::SliderFloat3("scale", &scale[0], -3.0f, 3.0f);
+    g_vec_model_scale = scale;
+
+    // Rotation using ImGuizmo
+    static glm::quat quat_rotation = g_quat_model_rotation; 
+    ImGui::Text("Rotation");
+    ImGui::gizmo3D("##quat", quat_rotation);
+    g_quat_model_rotation = quat_rotation;
+
 
     ImGui::End();
   }
@@ -182,13 +196,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   if (key == GLFW_KEY_L && action == GLFW_PRESS)
     g_vec_model_translate[0] += 0.1f;
   
-  // TODO
+  //move up
+  if (key == GLFW_KEY_K && action == GLFW_PRESS)
+    g_vec_model_translate[1] += 0.1f;
 
-  // scale
+  //move down
+  if (key == GLFW_KEY_J && action == GLFW_PRESS)
+    g_vec_model_translate[1] -= 0.1f;
+
+  // scale up
   if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
     g_vec_model_scale += 0.1f;
   
-  // TODO
+  // scale down
+  if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
+    g_vec_model_scale -= 0.1f;
 }
 
 
@@ -314,7 +336,11 @@ void set_transform()
   g_mat_proj = glm::perspective(glm::radians(g_fovy), g_aspect, 0.001f, 1000.f);
   
   // TODO: erase the following line and write your codes to properly set g_mat_model as T*R*S
-  g_mat_model = glm::translate(g_vec_model_translate);
+  // g_mat_model = glm::translate(g_vec_model_translate);
+  g_mat_model = glm::translate(glm::mat4(1.0f), g_vec_model_translate) *
+                             glm::toMat4(g_quat_model_rotation) *
+                             glm::scale(glm::mat4(1.0f), g_vec_model_scale);
+
 }
 
 
@@ -359,7 +385,7 @@ void init_scene()
   g_vec_model_scale = glm::vec3(1.f);
 
   // TODO: initialize quaternion for model rotation
-  // g_quat_model_rotation = ...
+  g_quat_model_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 
   g_fovy = 60.0f;
   g_aspect = 1.0f;
