@@ -15,7 +15,7 @@
 #CXX = clang++
 
 EXE = mesh
-IMGUI_DIR = ../../../../third_party/imgui-docking
+IMGUI_DIR = ../third_party/imgui-docking
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
